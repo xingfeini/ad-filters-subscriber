@@ -1,10 +1,9 @@
 
-${AnsiColor.BRIGHT_GREEN}  █████╗  ██████╗  ███████╗ ███████╗
-${AnsiColor.BRIGHT_GREEN} ██╔══██╗ ██╔══██╗ ██╔════╝ ██╔════╝
-${AnsiColor.BRIGHT_GREEN} ███████║ ██║  ██║ █████╗   ███████╗
-${AnsiColor.BRIGHT_GREEN} ██╔══██║ ██║  ██║ ██╔══╝   ╚════██║
-${AnsiColor.BRIGHT_GREEN} ██║  ██║ ██████╔╝ ██║      ███████║
-${AnsiColor.BRIGHT_GREEN} ╚═╝  ╚═╝ ╚═════╝  ╚═╝      ╚══════╝
-${AnsiColor.BRIGHT_CYAN} :: Application :: ${AnsiColor.BRIGHT_RED}${spring.application.name}
-${AnsiColor.BRIGHT_CYAN} :: Developers :: ${AnsiColor.BRIGHT_RED}fordes123
-${AnsiColor.BRIGHT_CYAN} :: Github :: ${AnsiColor.BRIGHT_RED}https://github.com/fordes123/ad-filters-subscriber${AnsiColor.BRIGHT_WHITE}
+@|bold,green    █████╗  ██████╗  ███████╗ ███████╗|@
+@|bold,green   ██╔══██╗ ██╔══██╗ ██╔════╝ ██╔════╝|@
+@|bold,green   ███████║ ██║  ██║ █████╗   ███████╗|@
+@|bold,green   ██╔══██║ ██║  ██║ ██╔══╝   ╚════██║|@
+@|bold,green   ██║  ██║ ██████╔╝ ██║      ███████║|@
+@|bold,green   ╚═╝  ╚═╝ ╚═════╝  ╚═╝      ╚══════╝|@
+@|bold,yellow   ⚡|@ @|bold,white AD Filter Subscriber • v%1$s|@
+@|bold,white  |@ @|faint https://github.com/fordes123/ad-filters-subscriber/issues|@

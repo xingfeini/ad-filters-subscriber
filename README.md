@@ -1,121 +1,84 @@
-<div align="center">
-<h1>AD Filter Subscriber</h1>
-  <p>
-    广告过滤规则订阅器，整合不同来源的规则，帮助你快速构建属于自己的规则集~
-  </p>
-<!-- Badges -->
-<p>
-  <img src="https://img.shields.io/github/last-commit/fordes123/ad-filters-subscriber?style=flat-square" alt="last update" />
-  <img src="https://img.shields.io/github/forks/fordes123/ad-filters-subscriber?style=flat-square" alt="forks" />
-  <img src="https://img.shields.io/github/stars/fordes123/ad-filters-subscriber?style=flat-square" alt="stars" />
-  <img src="https://img.shields.io/github/issues/fordes123/ad-filters-subscriber?style=flat-square" alt="open issues" />
-  <img src="https://img.shields.io/github/license/fordes123/ad-filters-subscriber?style=flat-square" alt="license" />
-</p>
+# AD Filter Subscriber
 
-<h4>
-    <a href="#a">项目说明</a>
-  <span> · </span>
-    <a href="#b">快速开始</a>
-  <span> · </span>
-    <a href="#c">规则订阅</a>
-  <span> · </span>
-    <a href="#d">问题反馈</a>
-  </h4>
-</div>
+[![Verify](https://github.com/fordes123/ad-filters-subscriber/actions/workflows/verify.yml/badge.svg)](https://github.com/fordes123/ad-filters-subscriber/actions/workflows/verify.yml)
+[![Version](https://img.shields.io/github/v/release/fordes123/ad-filters-subscriber?sort=semver)](https://github.com/fordes123/ad-filters-subscriber/releases)
+[![License](https://img.shields.io/github/license/fordes123/ad-filters-subscriber)](./LICENSE)
 
-<br/>
-<h2 id="a">📔 项目说明</h2>
+本项目用于聚合不同来源、不同格式的广告过滤规则，并按目标格式完成筛选、去重与转换。
 
-本项目旨在整合不同来源的广告过滤规则，通过 `Github Action` 定时执行，拉取远程规则，去重和分类输出。
-根据过滤规则的特性，本项目将规则分为 `DOMAIN`、`REGEX`、`MODIFY`、`HOSTS` 四种类型，它们之间互不包含， 你可在配置文件中自由的对四种类型进行组合：
+- [x] adblock (adguard、ubo、abp)
+- [x] dns
+- [x] dnsmasq
+- [x] mihomo (classical、domain、ipcidr)
+- [x] smartdns
+- [x] sing-box
+- [x] hosts
 
-- `DOMAIN`：基于域名的过滤规则，适用于几乎所有广告过滤工具
-- `REGEX`：包含通配符的**域名过滤**规则，适用于主流广告过滤工具
-- `MODIFY`：基于正则和其他修饰符的过滤规则，可以拦截页面上的特定元素，但不适用于DNS过滤
-- `HOSTS`：基于 `HOSTS` 的过滤规则，适用于支持 `HOSTS` 的所有设备
+> [!WARNING]
+> - 并非所有类型规则之间都可以进行转换，且无法精确转换的规则，默认不允许扩大或缩小匹配范围。
+> - 规则有效性检测基于域名解析，仅适用于可提取确定域名的规则。
 
-<br/>
-<h2 id="b">🛠️ 快速开始</h2>
+## 快速开始
 
-### 示例配置
+### CLI
 
-```yaml
-application:
-  rule:
-    #远程规则订阅，path为 http、https地址
-    remote:
-      - name: 'Subscription 1'
-        path: 'https://example.com/list.txt'
-
-    #本地规则，path为 操作系统支持的绝对或相对路径
-    local:
-      - name: 'private rule'
-        path: '/rule/private.txt'
-
-  output:
-    file_header: |  #输出文件头, 占位符${name}将被替换为文件名, ${date} 将被替换为当前日期时间
-      [ADFS Adblock List]
-      ! Title: ${name}
-      ! Last Modified: ${date}
-      ! Homepage: https://github.com/fordes123/ad-filters-subscriber/
-    path: rule   #规则文件输出路径，相对路径默认为程序所在路径
-    files:
-      all.txt: #输出文件名, 下列表为其包含的规则类型
-        - DOMAIN  #域名规则
-        - REGEX   #正则规则
-        - MODIFY  #修饰规则
-        - HOSTS   #hosts规则
-```
-
----
-本程序基于 `Java21` 编写，使用 `Maven` 进行构建，你可以参照示例配置，编辑 `src/main/resources/application.yml`
-，并通过以下任意一种方式快速开始：
-
-#### **本地调试**
+从 [Releases](https://github.com/fordes123/ad-filters-subscriber/releases) 获取二进制程序：
 
 ```bash
-git clone https://github.com/fordes123/ad-filters-subscriber.git
-cd ad-filters-subscriber
-mvn clean
-mvn spring-boot:run
+# 使用默认配置构建
+adfs
+
+# 使用指定配置构建
+adfs -c path/to/application.yml
 ```
 
-#### **Github Action**
+未指定 `-c/--config` 时，依次查找程序目录的 `application.yaml`、`config/application.yaml`，使用第一个存在的文件。
 
-- fork 本项目
-- 自定义规则订阅 (可选)
-    - 参照示例配置，修改配置文件: `src/main/resources/application.yml`
-- 打开 `Github Action` 页面，选中左侧 `Update Filters` 授权 `Workflow` 定时执行(⚠ 重要步骤)
-- 点击 `Run workflow` 或等待自动执行。执行完成后相应规则生成在配置中指定的目录下
+### GitHub Actions
 
-#### **Codespaces**
+1. Fork 仓库并修改 `config/application.yaml`。
+2. 在 **Actions** 页面启用工作流。
+3. 运行 **Update Filters**，或等待每 8 小时自动执行。
 
-- 登录 `Github`，点击本仓库右上角 `Code` 按钮，选择并创建新的 `Codespaces`
-- 等待 `Codespaces` 启动，即可直接对本项目进行调试
+产物默认提交至 `release` 分支。手动运行时可通过 `release-branch` 指定目标分支。
 
-### 如何更新
+```text
+https://raw.githubusercontent.com/<owner>/ad-filters-subscriber/release/<file>
+```
 
-当源代码存在更新时，(你的)仓库首页会出现如下图提示:
-<img src="./screen.png">
+## 示例配置
 
-此时选择 **Sync fork** 再选择 **Update branch** 即可同步更新.  
-(如曾修改过源代码，那么合并可能存在冲突，请谨慎处理)
+```yaml
+adfs:
+  # 输入规则源；可配置多个
+  input:
+    - name: upstream                        # 唯一的规则源名称
+      path: https://example.org/filter.txt  # HTTP、HTTPS 或本地文件路径
+      type: adblock                         # 规则格式 adblock、dns、hosts、dnsmasq、smartdns、mihomo、sing-box
+      dialect: ubo                          # Adblock 方言：core（默认）、abp、adguard、ubo
 
-<br/>
-<h2 id="c">🎯 规则订阅</h2>
+  output:
+    - name: easylist.txt                    # 输出文件名
+      type: adblock                         # 输出格式 adblock、dns、hosts、dnsmasq、smartdns、mihomo、sing-box
+      dialect: ubo                          # Adblock 方言：core（默认）、abp、adguard、ubo
 
-**⚠ 本仓库不再提供规则订阅，我们更推荐 fork 本项目自行构建规则集.**
+    - name: hosts
+      type: hosts
 
-下面是使用了本项目进行构建的规则仓库，可在其中寻找合适的规则订阅:
-<details>
-<summary>点击查看</summary>
-<ul>
-    <li><a href="https://github.com/xndeye/adblock_list/">xndeye/adblock_list</a></li>
-    <p>欢迎提交 issues 或 pr 留下你的仓库地址~</p>
-</ul>
-</details>
+    - name: clash.yaml
+      type: mihomo
+      dialect: domain                       # Mihomo 方言：classical（默认）、domain、ipcidr
 
-<br/>
-<h2 id="d">💬 问题反馈</h2>
+    - name: sing-box.json
+      type: sing-box
 
-- 👉 [issues](https://github.com/fordes123/ad-filters-subscriber/issues)
+  config:
+    output-dir: rule                        # 输出目录，默认为 rule
+```
+
+完整配置见
+[`config/application.yaml`](./config/application-example.yaml)。
+
+## License
+
+[MIT](./LICENSE)
